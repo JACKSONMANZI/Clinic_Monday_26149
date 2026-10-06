@@ -24,7 +24,8 @@ public Patient createPatient(Patient patient){
 }  
 public Patient updatePatient(Long id,Patient patientDetails){
 Patient patient= getPatientById(id);
-patient.setName(patientDetails.getName());
+patient.setFirstName(patientDetails.getFirstName());
+patient.setLastName(patientDetails.getLastName());
 patient.setDateOfBirth(patientDetails.getDateOfBirth());
 patient.setGender(patientDetails.getGender());
 patient.setPhone(patientDetails.getPhone());
