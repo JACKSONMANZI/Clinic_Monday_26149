@@ -35,4 +35,7 @@ public void deletePatient(Long id){
     Patient patient=getPatientById(id);
     patientRepository.delete(patient);
 }
+public List<Patient> getPatientsByLastName(String lastName) {
+    return patientRepository.findByLastNameIgnoreCaseOrderByFirstNameAsc(lastName);
+}
 }

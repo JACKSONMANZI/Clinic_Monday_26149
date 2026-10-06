@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.auca.clinic_management_system.entity.Appointment;
+import com.auca.clinic_management_system.entity.AppointmentStatus;
 
 public interface AppointmentRepository extends JpaRepository<Appointment,Long>{
 //Pending appointments
@@ -49,4 +50,12 @@ List<Appointment> pendingOverdue(@Param("today") LocalDate today);
     //Pagination: a doctor's appointments, 10 per page
     Page<Appointment> findByDoctorId(Long doctorId, Pageable pageable);
 
+    
+List<Appointment> findByStatusOrderByAppointmentDateAsc(AppointmentStatus status);
+
+
+List<Appointment> findByAppointmentDateBetweenOrderByAppointmentDateAsc(LocalDate start, LocalDate end);
+
+
+boolean existsByDoctorIdAndAppointmentDateAndStatusNot(Long doctorId, LocalDate date, AppointmentStatus status);
     }

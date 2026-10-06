@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.auca.clinic_management_system.entity.Patient;
@@ -40,5 +41,9 @@ public Patient updatePatient(@PathVariable Long id,@RequestBody Patient patient)
 @DeleteMapping ("/{id}")
 public void  deletePatient(@PathVariable Long id){
     patientService.deletePatient(id);
+}
+@GetMapping("/by-last-name")
+public List<Patient> getPatientsByLastName(@RequestParam  String lastName) {
+    return patientService.getPatientsByLastName(lastName);
 }
 }

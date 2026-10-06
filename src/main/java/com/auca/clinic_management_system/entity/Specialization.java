@@ -1,10 +1,13 @@
 package com.auca.clinic_management_system.entity;
 
+
+import java.util.Set;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
+import jakarta.persistence.ManyToMany;
 import lombok.Data;
 
 @Entity 
@@ -17,5 +20,6 @@ public class Specialization {
     private String name;
     private String description;
 
-
+ @ManyToMany(mappedBy = "specializations")
+    private Set<Doctor> doctors;
 }

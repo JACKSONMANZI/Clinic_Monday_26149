@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.auca.clinic_management_system.entity.Appointment;
+import com.auca.clinic_management_system.entity.AppointmentStatus;
 import com.auca.clinic_management_system.repository.AppointmentRepository;
 
 @Service 
@@ -56,5 +57,22 @@ public List<Appointment> getBySpecialization(String specName) {
 
 public Page<Appointment> getPagedByDoctor(Long doctorId, Pageable pageable) {
     return appointmentRepository.findByDoctorId(doctorId, pageable);
+}
+public List<Appointment> getByStatus(AppointmentStatus status) {
+    return appointmentRepository.findByStatusOrderByAppointmentDateAsc(status);
+}
+
+public List<Appointment> getBetween(LocalDate start, LocalDate end) {
+    return appointmentRepository.findByAppointmentDateBetweenOrderByAppointmentDateAsc(start, end);
+}
+
+public String saveWithCheck(Appointment appointment) {
+    boolean conflict = appointmentRepository.existsByDoctorIdAndAppointmentDateAndStatusNot(
+            appointment.getDoctor().getId(), appointment.getAppointmentDate(), AppointmentStatus.CANCELLED);
+    if (conflict) {
+        return "Doctor is already booked on that date";
+    }
+    appointmentRepository.save(appointment);
+    return "Appointment saved";
 }
 }
