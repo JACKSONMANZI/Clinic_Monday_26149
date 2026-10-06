@@ -55,3 +55,10 @@
 ### Bonus — Clean old cancellations
 *"Delete old cancelled appointments we no longer need to keep."*
 `deleteCancelledBefore`
+
+## Known issues
+
+- A4 (`POST /api/appointments/save`) currently returns a `500` error instead of
+  correctly saving or returning `409 Conflict`. The conflict-check logic and the
+  doctor/patient lookup are in place, but a transaction/commit error remains
+  unresolved.
