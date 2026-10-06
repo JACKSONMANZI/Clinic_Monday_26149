@@ -84,4 +84,12 @@ public String cancelDay(Long doctorId, LocalDate date) {
     int count = appointmentRepository.cancelDay(doctorId, date, AppointmentStatus.CANCELLED, AppointmentStatus.COMPLETED);
     return count + " appointments cancelled";
 }
+public Page<Appointment> getAppointmentsPage(Pageable pageable) {
+    return appointmentRepository.findAll(pageable);
+}
+@Transactional
+public String deleteCancelledBefore(LocalDate date) {
+    int count = appointmentRepository.deleteCancelledBefore(date, AppointmentStatus.CANCELLED);
+    return count + " appointments deleted";
+}
 }

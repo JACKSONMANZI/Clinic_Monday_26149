@@ -79,4 +79,9 @@ List<Object[]> findBusiestOfficeStats();
 @Query("UPDATE Appointment a SET a.status = :cancelled WHERE a.doctor.id = :doctorId AND a.appointmentDate = :date AND a.status <> :completed")
 int cancelDay(@Param("doctorId") Long doctorId, @Param("date") LocalDate date,
               @Param("cancelled") AppointmentStatus cancelled, @Param("completed") AppointmentStatus completed);
+
+@Modifying
+@Transactional
+@Query("DELETE FROM Appointment a WHERE a.status = :cancelled AND a.appointmentDate < :date")
+int deleteCancelledBefore(@Param("date") LocalDate date, @Param("cancelled") AppointmentStatus cancelled);
 }

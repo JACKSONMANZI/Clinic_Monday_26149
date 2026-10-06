@@ -103,4 +103,19 @@ public List<Object[]> getCountByStatus() {
 public String cancelDay(@RequestParam Long doctorId, @RequestParam String date) {
     return appointmentService.cancelDay(doctorId, LocalDate.parse(date));
 }
+@GetMapping("/page")
+public Page<Appointment> getAppointmentsPage(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int size,
+        @RequestParam(defaultValue = "appointmentDate,desc") String sort) {
+    String[] parts = sort.split(",");
+    Sort.Direction direction = parts.length > 1 && parts[1].equalsIgnoreCase("desc")
+            ? Sort.Direction.DESC : Sort.Direction.ASC;
+    Pageable pageable = PageRequest.of(page, size, Sort.by(direction, parts[0]));
+    return appointmentService.getAppointmentsPage(pageable);
+}
+@DeleteMapping("/cancelled-before")
+public String deleteCancelledBefore(@RequestParam String date) {
+    return appointmentService.deleteCancelledBefore(LocalDate.parse(date));
+}
 }
