@@ -35,4 +35,7 @@ public class SpecializationService {
         Specialization specialization=getSpecializationById(id);
         specializationRepository.delete(specialization);
     }
+    public List<Specialization> getUnused() {
+    return specializationRepository.findUnused();
+}
 }

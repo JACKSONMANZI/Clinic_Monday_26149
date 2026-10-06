@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.auca.clinic_management_system.entity.Patient;
+import com.auca.clinic_management_system.repository.AppointmentRepository;
+import com.auca.clinic_management_system.repository.DoctorRepository;
 import com.auca.clinic_management_system.repository.PatientRepository;
 
 @Service 
@@ -37,5 +39,17 @@ public void deletePatient(Long id){
 }
 public List<Patient> getPatientsByLastName(String lastName) {
     return patientRepository.findByLastNameIgnoreCaseOrderByFirstNameAsc(lastName);
+}
+@Autowired
+private AppointmentRepository appointmentRepository;
+@Autowired
+private DoctorRepository doctorRepository;
+
+public boolean doctorExists(Long doctorId) {
+    return doctorRepository.existsById(doctorId);
+}
+
+public List<Patient> getPatientsOfDoctor(Long doctorId) {
+    return appointmentRepository.findPatientsByDoctorId(doctorId);
 }
 }

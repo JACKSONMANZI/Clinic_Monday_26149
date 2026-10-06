@@ -35,4 +35,11 @@ public class DoctorService {
         Doctor doctor = getDoctorById(id);
         doctorRepository.delete(doctor);
     }
+    
+public List<Doctor> getBySpecializationName(String name) {
+    return doctorRepository.findBySpecializationName(name);
+}
+public List<Doctor> getWithoutOffice() {
+    return doctorRepository.findWithoutOffice();
+}
 }

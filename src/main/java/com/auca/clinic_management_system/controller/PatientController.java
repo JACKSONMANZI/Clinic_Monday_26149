@@ -3,6 +3,8 @@ package com.auca.clinic_management_system.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,5 +47,12 @@ public void  deletePatient(@PathVariable Long id){
 @GetMapping("/by-last-name")
 public List<Patient> getPatientsByLastName(@RequestParam  String lastName) {
     return patientService.getPatientsByLastName(lastName);
+}
+@GetMapping("/of-doctor/{doctorId}")
+public ResponseEntity<?> getPatientsOfDoctor(@PathVariable Long doctorId) {
+    if (!patientService.doctorExists(doctorId)) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The doctor with that id does not exist");
+    }
+    return ResponseEntity.ok(patientService.getPatientsOfDoctor(doctorId));
 }
 }

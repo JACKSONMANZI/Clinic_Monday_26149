@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.auca.clinic_management_system.entity.Doctor;
@@ -41,4 +42,12 @@ public class DoctorControllor {
     public void deleteDoctor(@PathVariable  Long id){
         doctorService.deleteDoctor(id);
     }
+@GetMapping("/by-specialization")
+public List<Doctor> getBySpecializationName(@RequestParam String name) {
+    return doctorService.getBySpecializationName(name);
+}
+@GetMapping("/without-office")
+public List<Doctor> getWithoutOffice() {
+    return doctorService.getWithoutOffice();
+}
 }

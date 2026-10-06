@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.auca.clinic_management_system.entity.Appointment;
 import com.auca.clinic_management_system.entity.AppointmentStatus;
+import com.auca.clinic_management_system.entity.Patient;
 
 public interface AppointmentRepository extends JpaRepository<Appointment,Long>{
 //Pending appointments
@@ -58,4 +59,7 @@ List<Appointment> findByAppointmentDateBetweenOrderByAppointmentDateAsc(LocalDat
 
 
 boolean existsByDoctorIdAndAppointmentDateAndStatusNot(Long doctorId, LocalDate date, AppointmentStatus status);
-    }
+   
+@Query("SELECT DISTINCT a.patient FROM Appointment a WHERE a.doctor.id = :doctorId")
+List<Patient> findPatientsByDoctorId(@Param("doctorId") Long doctorId);
+}
