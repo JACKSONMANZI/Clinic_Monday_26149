@@ -11,12 +11,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.auca.clinic_management_system.entity.Appointment;
 import com.auca.clinic_management_system.entity.AppointmentStatus;
+import com.auca.clinic_management_system.entity.Doctor;
+import com.auca.clinic_management_system.entity.Patient;
 import com.auca.clinic_management_system.repository.AppointmentRepository;
+import com.auca.clinic_management_system.repository.DoctorRepository;
+import com.auca.clinic_management_system.repository.PatientRepository;
 
 @Service 
 public class AppointmentService {
     @Autowired 
     private AppointmentRepository appointmentRepository;
+
+    @Autowired
+private DoctorRepository doctorRepository;
+
+@Autowired
+private PatientRepository patientRepository;
     public List<Appointment> getallAppointments(){
         return appointmentRepository.findAll();
     }
@@ -68,8 +78,16 @@ public List<Appointment> getBetween(LocalDate start, LocalDate end) {
 }
 
 public String saveWithCheck(Appointment appointment) {
+    Doctor doctor = doctorRepository.findById(appointment.getDoctor().getId())
+            .orElseThrow(() -> new RuntimeException("Doctor not found"));
+    Patient patient = patientRepository.findById(appointment.getPatient().getId())
+            .orElseThrow(() -> new RuntimeException("Patient not found"));
+
+    appointment.setDoctor(doctor);
+    appointment.setPatient(patient);
+
     boolean conflict = appointmentRepository.existsByDoctorIdAndAppointmentDateAndStatusNot(
-            appointment.getDoctor().getId(), appointment.getAppointmentDate(), AppointmentStatus.CANCELLED);
+            doctor.getId(), appointment.getAppointmentDate(), AppointmentStatus.CANCELLED);
     if (conflict) {
         return "Doctor is already booked on that date";
     }

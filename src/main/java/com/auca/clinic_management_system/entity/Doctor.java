@@ -2,6 +2,8 @@ package com.auca.clinic_management_system.entity;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,6 +14,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import lombok.Data;
 
+@JsonIncludeProperties({"hibernateLazyInitializer", "handler"})
 @Entity 
 @Data 
 public class Doctor {

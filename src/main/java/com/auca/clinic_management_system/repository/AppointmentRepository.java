@@ -84,4 +84,5 @@ int cancelDay(@Param("doctorId") Long doctorId, @Param("date") LocalDate date,
 @Transactional
 @Query("DELETE FROM Appointment a WHERE a.status = :cancelled AND a.appointmentDate < :date")
 int deleteCancelledBefore(@Param("date") LocalDate date, @Param("cancelled") AppointmentStatus cancelled);
+
 }
