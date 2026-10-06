@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.auca.clinic_management_system.entity.Office;
+import com.auca.clinic_management_system.repository.AppointmentRepository;
 import com.auca.clinic_management_system.repository.OfficeRepository;
 
 @Service 
@@ -34,5 +35,11 @@ public class OfficeService {
         Office office = getOfficeById(id);
         officeRepository.delete(office);
     }
+    @Autowired
+private AppointmentRepository appointmentRepository;
+
+public List<Object[]> getBusiestOfficeStats() {
+    return appointmentRepository.findBusiestOfficeStats();
+}
 }
 

@@ -55,4 +55,8 @@ public ResponseEntity<?> getPatientsOfDoctor(@PathVariable Long doctorId) {
     }
     return ResponseEntity.ok(patientService.getPatientsOfDoctor(doctorId));
 }
+@GetMapping("/frequent")
+public List<Patient> getFrequentPatients(@RequestParam long min) {
+    return patientService.getFrequentPatients(min);
+}
 }

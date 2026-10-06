@@ -3,6 +3,7 @@ package com.auca.clinic_management_system.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,4 +45,14 @@ public class OfficeController {
     public void deleteOffice(@PathVariable Long id) {
         officeService.deleteOffice(id);
     }
+    @GetMapping("/busiest")
+public ResponseEntity<?> getBusiestOffice() {
+    List<Object[]> results = officeService.getBusiestOfficeStats();
+    if (results.isEmpty()) {
+        return ResponseEntity.ok("No appointments yet");
+    }
+    
+    return ResponseEntity.ok(results.get(0));
+}
+
 }

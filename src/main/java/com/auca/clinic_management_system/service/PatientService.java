@@ -52,4 +52,7 @@ public boolean doctorExists(Long doctorId) {
 public List<Patient> getPatientsOfDoctor(Long doctorId) {
     return appointmentRepository.findPatientsByDoctorId(doctorId);
 }
+public List<Patient> getFrequentPatients(long min) {
+    return appointmentRepository.findFrequentPatients(min);
+}
 }

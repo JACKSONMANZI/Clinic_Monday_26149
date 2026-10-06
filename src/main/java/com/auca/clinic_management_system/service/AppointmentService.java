@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.auca.clinic_management_system.entity.Appointment;
 import com.auca.clinic_management_system.entity.AppointmentStatus;
@@ -74,5 +75,13 @@ public String saveWithCheck(Appointment appointment) {
     }
     appointmentRepository.save(appointment);
     return "Appointment saved";
+}
+public List<Object[]> getCountByStatus() {
+    return appointmentRepository.countByStatus();
+}
+@Transactional
+public String cancelDay(Long doctorId, LocalDate date) {
+    int count = appointmentRepository.cancelDay(doctorId, date, AppointmentStatus.CANCELLED, AppointmentStatus.COMPLETED);
+    return count + " appointments cancelled";
 }
 }

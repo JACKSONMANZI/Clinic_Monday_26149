@@ -6,8 +6,10 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.auca.clinic_management_system.entity.Appointment;
 import com.auca.clinic_management_system.entity.AppointmentStatus;
@@ -62,4 +64,19 @@ boolean existsByDoctorIdAndAppointmentDateAndStatusNot(Long doctorId, LocalDate 
    
 @Query("SELECT DISTINCT a.patient FROM Appointment a WHERE a.doctor.id = :doctorId")
 List<Patient> findPatientsByDoctorId(@Param("doctorId") Long doctorId);
+
+@Query("SELECT a.status, COUNT(a) FROM Appointment a GROUP BY a.status")
+List<Object[]> countByStatus();
+
+@Query("SELECT a.patient FROM Appointment a GROUP BY a.patient HAVING COUNT(a) >= :min ORDER BY COUNT(a) DESC")
+List<Patient> findFrequentPatients(@Param("min") long min);
+
+@Query("SELECT o.roomNumber, COUNT(a) FROM Appointment a JOIN a.doctor d JOIN d.office o GROUP BY o.roomNumber ORDER BY COUNT(a) DESC")
+List<Object[]> findBusiestOfficeStats();
+
+@Modifying
+@Transactional 
+@Query("UPDATE Appointment a SET a.status = :cancelled WHERE a.doctor.id = :doctorId AND a.appointmentDate = :date AND a.status <> :completed")
+int cancelDay(@Param("doctorId") Long doctorId, @Param("date") LocalDate date,
+              @Param("cancelled") AppointmentStatus cancelled, @Param("completed") AppointmentStatus completed);
 }
