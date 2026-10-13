@@ -120,4 +120,32 @@ public String updateStatus(Long id, AppointmentStatus updatedStatus){
     appointmentRepository.save(appointment);
     return "Appointment status updated successfully";
 }
+public String rescheduleAppointment(Long id , LocalDate toDaysDate){
+    Optional<Appointment> appointmentOptional=appointmentRepository.findById(id);
+    if (appointmentOptional.isEmpty()) {
+       return "The appointment with that id does not exist"; 
+    }
+    Appointment appointment=appointmentOptional.get();
+    if (appointment.getStatus()==AppointmentStatus.COMPLETED) {
+        return "A COMPLETED appointment cannot be rescheduled";
+        
+    }
+    if (appointment.getStatus()==AppointmentStatus.CANCELLED) {
+        return "A CANCELLED appointment cannot be rescheduled";
+        
+    }
+    if (toDaysDate.isBefore(LocalDate.now())) {
+        return "Appointment date cannot be in the past";
+        
+    }
+    boolean doctorBusy = appointmentRepository.existsByDoctorIdAndAppointmentDateAndStatusNot(appointment.getDoctor().getId(),toDaysDate,AppointmentStatus.CANCELLED);
+    if (doctorBusy) {
+        return "Doctor is already booked on that date ";
+        
+    }
+    appointment.setAppointmentDate(toDaysDate);
+    appointment.setStatus(AppointmentStatus.SCHEDULED);
+    appointmentRepository.save(appointment);
+    return "Appointment rescheduled successfully";
+}
 }

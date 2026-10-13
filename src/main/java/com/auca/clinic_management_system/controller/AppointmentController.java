@@ -129,4 +129,19 @@ public ResponseEntity<String> updateStatus(@PathVariable Long id,@RequestParam  
     }
     return ResponseEntity.ok(output);
 }
+@PatchMapping ("/{id}/reschedule")
+public  ResponseEntity<String> reschedule(@PathVariable Long id, @RequestParam LocalDate newDate){
+   String ouput=appointmentService.rescheduleAppointment(id, newDate) ;
+   if (ouput.equals("The appointment with that id does not exist")) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ouput);
+   }
+   if (ouput.startsWith("A COMPLETED appointment cannot be rescheduled")||ouput.startsWith("A CANCELLED appointment cannot be rescheduled")||ouput.equals("Appointment date cannot be in the past")) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ouput);
+   }
+   if (ouput.equals("Doctor is already booked on that date ")) {
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(ouput);
+   }
+   return ResponseEntity.ok(ouput);
+}
+
 }
