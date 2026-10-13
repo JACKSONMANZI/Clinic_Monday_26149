@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.auca.clinic_management_system.entity.Doctor;
+import com.auca.clinic_management_system.entity.Office;
 import com.auca.clinic_management_system.entity.Specialization;
 import com.auca.clinic_management_system.repository.DoctorRepository;
+import com.auca.clinic_management_system.repository.OfficeRepository;
 import com.auca.clinic_management_system.repository.SpecializationRepository;
 
 @Service 
@@ -90,5 +92,30 @@ public String removeSpecializationInDr(Long doctorId, Long specializationId){
     doctor.getSpecializations().remove(specialization);
     doctorRepository.save(doctor);
     return "Specialization removed from the doctor.";
+}
+@Autowired 
+private OfficeRepository officeRepository;
+public String swapDoctorOffice(Long doctorId,Integer officeNumber){
+    Optional<Doctor> doctorOptional = doctorRepository.findById(doctorId);
+    if (doctorOptional.isEmpty()) {
+        return "The doctor with that id does not exist";
+        
+    } 
+    Optional<Office> officeOptional = officeRepository.findByOfficeNumber(officeNumber);
+    if (officeOptional.isEmpty()) {
+        return "The office whith that office number does not exist";
+        
+    }
+    Doctor doctor = doctorOptional.get();
+    Office replaceOffice = officeOptional.get();
+
+    boolean sameOffice=replaceOffice.equals(doctor.getOffice());
+    if (!sameOffice && doctorRepository.existsByOffice_OfficeNumber(officeNumber)) {
+        return "That office is taken by other doctor";
+        
+    }
+    doctor.setOffice(replaceOffice);
+    doctorRepository.save(doctor);
+    return "Office changed successfully";
 }
 }

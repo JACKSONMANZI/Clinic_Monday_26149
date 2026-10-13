@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.auca.clinic_management_system.entity.Doctor;
 import com.auca.clinic_management_system.service.DoctorService;
+
+import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping ("/api/doctors")
@@ -81,5 +84,19 @@ public ResponseEntity<String> removeSpecializationNow(@PathVariable Long doctorI
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ouput);
     }
     return ResponseEntity.ok(ouput);
+}
+@PatchMapping ("/{doctorId}/office")
+public ResponseEntity<String> swapDoctorOffice(@PathVariable Long doctorId,@RequestParam Integer officeNumber){
+    String output = doctorService.swapDoctorOffice(doctorId, officeNumber);
+    if (output.equals("The doctor with that id does not exist")) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(output);
+    }
+    if (output.equals("The office whith that office number does not exist")) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(output);
+    }
+    if (output.equals("That office is taken by other doctor")) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(output);
+    }
+    return ResponseEntity.ok(output);
 }
 }
