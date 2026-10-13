@@ -69,4 +69,26 @@ public String addSpecializationToDoctor(Long doctorId,Long specializationId){
     doctorRepository.save(doctor);
     return "Specialization added to the doctor";
 }
+public String removeSpecializationInDr(Long doctorId, Long specializationId){
+    Optional<Doctor> doctorOptional=doctorRepository.findById(doctorId);
+    if (doctorOptional.isEmpty()) {
+        return "The doctor with that id does not exist";
+        
+    }
+    Optional<Specialization> specializationOptional=specializationRepository.findById(specializationId);
+    if (specializationOptional.isEmpty()) {
+        return "That specialization does not exist";
+        
+    }
+    Doctor doctor=doctorOptional.get();
+    Specialization specialization=specializationOptional.get();
+
+    if (!doctor.getSpecializations().contains(specialization)) {
+        return "The doctor does not have that specialization";
+        
+    }
+    doctor.getSpecializations().remove(specialization);
+    doctorRepository.save(doctor);
+    return "Specialization removed from the doctor.";
+}
 }
