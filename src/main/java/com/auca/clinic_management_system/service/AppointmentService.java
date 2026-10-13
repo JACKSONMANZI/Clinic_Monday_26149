@@ -158,4 +158,10 @@ public String rescheduleAppointment(Long id , LocalDate toDaysDate){
     appointmentRepository.save(appointment);
     return "Appointment rescheduled successfully";
 }
+public Optional<List<Appointment>> getDoctorAgenda(Long doctorId, LocalDate date) {
+    if (!doctorRepository.existsById(doctorId)) {
+        return Optional.empty();
+    }
+    return Optional.of(appointmentRepository.findByDoctor_IdAndAppointmentDateAndStatusNot(doctorId, date, AppointmentStatus.CANCELLED));
+}
 }

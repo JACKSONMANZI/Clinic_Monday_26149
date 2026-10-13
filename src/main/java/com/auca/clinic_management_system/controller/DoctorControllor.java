@@ -1,6 +1,8 @@
 package com.auca.clinic_management_system.controller;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.auca.clinic_management_system.entity.Appointment;
 import com.auca.clinic_management_system.entity.Doctor;
+import com.auca.clinic_management_system.service.AppointmentService;
 import com.auca.clinic_management_system.service.DoctorService;
 
 import jakarta.websocket.server.PathParam;
@@ -98,5 +102,16 @@ public ResponseEntity<String> swapDoctorOffice(@PathVariable Long doctorId,@Requ
         return ResponseEntity.status(HttpStatus.CONFLICT).body(output);
     }
     return ResponseEntity.ok(output);
+}
+@Autowired 
+private AppointmentService appointmentService;
+@GetMapping("/{doctorId}/agenda")
+public ResponseEntity<?> getAgenda(@PathVariable Long doctorId, @RequestParam LocalDate date) {
+    Optional<List<Appointment>> res = appointmentService.getDoctorAgenda(doctorId, date);
+
+    if (res.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The doctor with that id does not exist");
+    }
+    return ResponseEntity.ok(res.get());
 }
 }
