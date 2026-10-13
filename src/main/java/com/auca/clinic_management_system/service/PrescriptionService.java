@@ -1,6 +1,7 @@
 package com.auca.clinic_management_system.service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,12 @@ public class PrescriptionService {
      prescription.setAppointment(appointment);
      prescriptionRepository.save(prescription);
      return "Prescription saved successfully";
+    }
+    public Optional<List<Prescription>> getPrescriptionsByAppointment(Long appointmentId){
+        if (!appointmentRepository.existsById(appointmentId)) {
+            return Optional.empty();
+        }
+        return  Optional.of(prescriptionRepository.findByAppointment_Id(appointmentId));
+
     }
 }
