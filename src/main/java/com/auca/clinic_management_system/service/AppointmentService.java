@@ -2,6 +2,7 @@ package com.auca.clinic_management_system.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,7 +38,6 @@ private PatientRepository patientRepository;
         Appointment appointment=getAppointmentById(id);
         appointment.setAppointmentDate(appointmentDetails.getAppointmentDate());
         appointment.setAppointmentTime(appointmentDetails.getAppointmentTime());
-        appointment.setStatus(appointmentDetails.getStatus());
 
         return appointmentRepository.save(appointment);
     }
@@ -96,5 +96,28 @@ public Page<Appointment> getAppointmentsPage(Pageable pageable) {
 public String deleteCancelledBefore(LocalDate date) {
     int count = appointmentRepository.deleteCancelledBefore(date, AppointmentStatus.CANCELLED);
     return count + " appointments deleted";
+}
+public String updateStatus(Long id, AppointmentStatus updatedStatus){
+    Optional<Appointment> appointmentOptional=appointmentRepository.findById(id);
+    if (appointmentOptional.isEmpty()) {
+        return "The appointment with that id does not exist";
+    }
+    Appointment appointment=appointmentOptional.get();
+    AppointmentStatus current=appointment.getStatus();
+
+    boolean allowed = false;
+
+    if (current==AppointmentStatus.SCHEDULED && (updatedStatus==AppointmentStatus.CONFIRMED || updatedStatus == AppointmentStatus.CANCELLED)) {
+        allowed=true;
+    }
+    else if (current==AppointmentStatus.CONFIRMED && (updatedStatus==AppointmentStatus.COMPLETED || updatedStatus==AppointmentStatus.CANCELLED)) {
+        allowed=true;
+    }
+    if (!allowed) {
+       return "Cannot change status from "+current+" to "+updatedStatus;
+    }
+    appointment.setStatus(updatedStatus);
+    appointmentRepository.save(appointment);
+    return "Appointment status updated successfully";
 }
 }

@@ -118,4 +118,15 @@ public Page<Appointment> getAppointmentsPage(
 public String deleteCancelledBefore(@RequestParam String date) {
     return appointmentService.deleteCancelledBefore(LocalDate.parse(date));
 }
+@PatchMapping ("/{id}/status")
+public ResponseEntity<String> updateStatus(@PathVariable Long id,@RequestParam  AppointmentStatus status){
+    String output=appointmentService.updateStatus(id, status);
+    if (output.equals("The appointment with that id does not exist")) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(output);
+    }
+    if (output.startsWith("Cannot change status from")) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(output);
+    }
+    return ResponseEntity.ok(output);
+}
 }
