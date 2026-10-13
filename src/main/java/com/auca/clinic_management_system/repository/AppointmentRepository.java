@@ -17,10 +17,10 @@ import com.auca.clinic_management_system.entity.Patient;
 
 public interface AppointmentRepository extends JpaRepository<Appointment,Long>{
 //Pending appointments
-List<Appointment>findByDoctorIdAndStatusOrderByAppointmentDateAsc(Long doctorId, String status);
+List<Appointment> findByDoctorIdAndStatusOrderByAppointmentDateAsc(Long doctorId, AppointmentStatus status);
 //PENDING appointments whose date has already passed
 
-@Query("""
+/*@Query("""
     SELECT a FROM Appointment a 
     JOIN FETCH a.doctor d 
     JOIN FETCH a.patient p 
@@ -28,13 +28,13 @@ List<Appointment>findByDoctorIdAndStatusOrderByAppointmentDateAsc(Long doctorId,
 """)
 
 List<Appointment> pendingOverdue(@Param("today") LocalDate today);
-
+*/
 //Aggregate: number of appointments per doctor
 
  @Query("""
-        SELECT d.name, COUNT(a)
+        SELECT d.firstName,d.lastName, COUNT(a)
         FROM Appointment a JOIN a.doctor d
-        GROUP BY d.name
+        GROUP BY d.firstName,d.lastName
         ORDER BY COUNT(a) DESC
         """)
     List<Object[]> appointmentsPerDoctor();
@@ -71,7 +71,7 @@ List<Object[]> countByStatus();
 @Query("SELECT a.patient FROM Appointment a GROUP BY a.patient HAVING COUNT(a) >= :min ORDER BY COUNT(a) DESC")
 List<Patient> findFrequentPatients(@Param("min") long min);
 
-@Query("SELECT o.roomNumber, COUNT(a) FROM Appointment a JOIN a.doctor d JOIN d.office o GROUP BY o.roomNumber ORDER BY COUNT(a) DESC")
+@Query("SELECT o.officeNumber, COUNT(a) FROM Appointment a JOIN a.doctor d JOIN d.office o GROUP BY o.officeNumber ORDER BY COUNT(a) DESC")
 List<Object[]> findBusiestOfficeStats();
 
 @Modifying

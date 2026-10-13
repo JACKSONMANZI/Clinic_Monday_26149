@@ -12,6 +12,6 @@ public class Office {
     @Id 
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
-    private String roomNumber;
+    private Integer officeNumber;
 
 }

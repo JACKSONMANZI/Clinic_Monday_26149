@@ -50,13 +50,13 @@ private PatientRepository patientRepository;
 
         appointmentRepository.delete(appointment);
     }
-    public List<Appointment> getPendingByDoctor(Long doctorId) {
+  /*   public List<Appointment> getPendingByDoctor(Long doctorId) {
     return appointmentRepository.findByDoctorIdAndStatusOrderByAppointmentDateAsc(doctorId, "PENDING");
 }
 
 public List<Appointment> getPendingOverdue() {
     return appointmentRepository.pendingOverdue(LocalDate.now());
-}
+}*/
 
 public List<Object[]> getAppointmentsPerDoctor() {
     return appointmentRepository.appointmentsPerDoctor();

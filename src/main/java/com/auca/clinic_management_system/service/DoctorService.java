@@ -24,7 +24,8 @@ public class DoctorService {
     }
     public Doctor updateDoctor(Long id, Doctor doctorDetails ){
         Doctor doctor= getDoctorById(id);
-        doctor.setName(doctorDetails.getName());
+        doctor.setFirstName(doctorDetails.getFirstName());
+        doctor.setLastName(doctorDetails.getLastName());
         doctor.setEmail(doctorDetails.getEmail());
         doctor.setPhone(doctorDetails.getPhone());
         doctor.setOffice(doctorDetails.getOffice());

@@ -51,7 +51,7 @@ public class AppointmentController {
     public void deleteAppointment(@PathVariable Long id){
         appointmentService.deleteAppointment(id);
     }
-    @GetMapping("/doctor/{doctorId}/pending")
+   /*  @GetMapping("/doctor/{doctorId}/pending")
 public List<Appointment> pendingByDoctor(@PathVariable Long doctorId) {
     return appointmentService.getPendingByDoctor(doctorId);
 }
@@ -59,7 +59,7 @@ public List<Appointment> pendingByDoctor(@PathVariable Long doctorId) {
 @GetMapping("/pending-overdue")
 public List<Appointment> pendingOverdue() {
     return appointmentService.getPendingOverdue();
-}
+}*/
 
 @GetMapping("/per-doctor")
 public List<Object[]> appointmentsPerDoctor() {

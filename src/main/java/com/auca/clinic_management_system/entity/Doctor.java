@@ -1,9 +1,8 @@
 package com.auca.clinic_management_system.entity;
 
-import java.util.Set;
-
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
-
+import java.util.ArrayList;
+import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,14 +13,15 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import lombok.Data;
 
-@JsonIncludeProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity 
 @Data 
 public class Doctor {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String firstName;
+    private String lastName;
     private String email;
     private String phone;
 
@@ -31,5 +31,5 @@ public class Doctor {
 
     @ManyToMany 
     @JoinTable (name = "doctor_specialization",joinColumns =@JoinColumn (name="doctor_id"),inverseJoinColumns = @JoinColumn (name="specialization_id"))
-    private Set<Specialization> specializations;
+    private List<Specialization> specializations = new ArrayList<>();
 }
