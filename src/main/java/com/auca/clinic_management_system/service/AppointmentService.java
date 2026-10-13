@@ -11,8 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.auca.clinic_management_system.entity.Appointment;
 import com.auca.clinic_management_system.entity.AppointmentStatus;
-import com.auca.clinic_management_system.entity.Doctor;
-import com.auca.clinic_management_system.entity.Patient;
 import com.auca.clinic_management_system.repository.AppointmentRepository;
 import com.auca.clinic_management_system.repository.DoctorRepository;
 import com.auca.clinic_management_system.repository.PatientRepository;
@@ -21,11 +19,9 @@ import com.auca.clinic_management_system.repository.PatientRepository;
 public class AppointmentService {
     @Autowired 
     private AppointmentRepository appointmentRepository;
-
-    @Autowired
+@Autowired 
 private DoctorRepository doctorRepository;
-
-@Autowired
+@Autowired 
 private PatientRepository patientRepository;
     public List<Appointment> getallAppointments(){
         return appointmentRepository.findAll();
@@ -77,22 +73,13 @@ public List<Appointment> getBetween(LocalDate start, LocalDate end) {
     return appointmentRepository.findByAppointmentDateBetweenOrderByAppointmentDateAsc(start, end);
 }
 
-public String saveWithCheck(Appointment appointment) {
-    Doctor doctor = doctorRepository.findById(appointment.getDoctor().getId())
-            .orElseThrow(() -> new RuntimeException("Doctor not found"));
-    Patient patient = patientRepository.findById(appointment.getPatient().getId())
-            .orElseThrow(() -> new RuntimeException("Patient not found"));
-
-    appointment.setDoctor(doctor);
-    appointment.setPatient(patient);
-
-    boolean conflict = appointmentRepository.existsByDoctorIdAndAppointmentDateAndStatusNot(
-            doctor.getId(), appointment.getAppointmentDate(), AppointmentStatus.CANCELLED);
-    if (conflict) {
-        return "Doctor is already booked on that date";
+public  String saveAppointment(Appointment appointment){
+    if (appointment.getAppointmentDate()==null || appointment.getAppointmentDate().isBefore(LocalDate.now())) {
+        return "Appointment date cannot be in the past";
     }
+    appointment.setStatus(AppointmentStatus.SCHEDULED);
     appointmentRepository.save(appointment);
-    return "Appointment saved";
+    return "Appointment saved successfully";
 }
 public List<Object[]> getCountByStatus() {
     return appointmentRepository.countByStatus();

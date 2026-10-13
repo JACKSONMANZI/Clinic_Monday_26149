@@ -89,11 +89,11 @@ public List<Appointment> getBetween(@RequestParam String start, @RequestParam St
 }
 @PostMapping("/save")
 public ResponseEntity<String> saveAppointment(@RequestBody Appointment appointment) {
-    String result = appointmentService.saveWithCheck(appointment);
-    if (result.startsWith("Doctor is already booked")) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
+    String output = appointmentService.saveAppointment(appointment);
+    if (output.equals("Appointment date cannot be in the past")) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(output);
     }
-    return ResponseEntity.ok(result);
+    return ResponseEntity.status(HttpStatus.CREATED).body(output);
 }
 @GetMapping("/stats/by-status")
 public List<Object[]> getCountByStatus() {
