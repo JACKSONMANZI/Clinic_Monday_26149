@@ -54,5 +54,8 @@ public ResponseEntity<?> getBusiestOffice() {
     
     return ResponseEntity.ok(results.get(0));
 }
-
+@GetMapping ("/free")
+public List<Office> getFreeOffices(){
+    return officeService.getFreeOffices();
+}
 }

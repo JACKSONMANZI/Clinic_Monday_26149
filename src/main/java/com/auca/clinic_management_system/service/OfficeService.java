@@ -41,5 +41,8 @@ private AppointmentRepository appointmentRepository;
 public List<Object[]> getBusiestOfficeStats() {
     return appointmentRepository.findBusiestOfficeStats();
 }
+public List<Office> getFreeOffices(){
+    return officeRepository.findFreeOffices();
+}
 }
 
