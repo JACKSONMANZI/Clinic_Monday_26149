@@ -3,6 +3,8 @@ package com.auca.clinic_management_system.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,5 +51,21 @@ public List<Doctor> getBySpecializationName(@RequestParam String name) {
 @GetMapping("/without-office")
 public List<Doctor> getWithoutOffice() {
     return doctorService.getWithoutOffice();
+}
+
+@PutMapping ("/{doctorId}/specializations/{specializationId}")
+public ResponseEntity<String> addSpecialization(@PathVariable Long doctorId,@PathVariable Long specializationId){
+    String resulty=doctorService.addSpecializationToDoctor(doctorId, specializationId);
+    if (resulty.equals("the doctor whith that id does not exist")){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resulty);
+        
+    }
+    if (resulty.equals("That Specialization does not exist")){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resulty);
+    }
+    if (resulty.equals("The doctor already has that specialization " )){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(resulty);
+    }
+    return ResponseEntity.ok(resulty);
 }
 }
