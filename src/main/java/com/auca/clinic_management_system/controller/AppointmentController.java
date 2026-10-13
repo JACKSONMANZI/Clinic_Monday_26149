@@ -47,10 +47,18 @@ public class AppointmentController {
     public Appointment updateAppointment(@PathVariable Long id,@RequestBody Appointment appointment){
         return appointmentService.updateAppointment(id, appointment);
     }
-    @DeleteMapping ("/{id}")
-    public void deleteAppointment(@PathVariable Long id){
-        appointmentService.deleteAppointment(id);
+  @DeleteMapping("/{id}")
+public ResponseEntity<String> deleteAppointment(@PathVariable Long id) {
+    String res = appointmentService.deleteAppointment(id);
+
+    if (res.equals("The appointment with that id does not exist")) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
     }
+    if (res.equals("That appointment has prescriptions, delete them first")) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(res);
+    }
+    return ResponseEntity.ok(res);
+}
    /*  @GetMapping("/doctor/{doctorId}/pending")
 public List<Appointment> pendingByDoctor(@PathVariable Long doctorId) {
     return appointmentService.getPendingByDoctor(doctorId);

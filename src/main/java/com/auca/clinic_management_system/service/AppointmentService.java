@@ -15,6 +15,7 @@ import com.auca.clinic_management_system.entity.AppointmentStatus;
 import com.auca.clinic_management_system.repository.AppointmentRepository;
 import com.auca.clinic_management_system.repository.DoctorRepository;
 import com.auca.clinic_management_system.repository.PatientRepository;
+import com.auca.clinic_management_system.repository.PrescriptionRepository;
 
 @Service 
 public class AppointmentService {
@@ -24,6 +25,9 @@ public class AppointmentService {
 private DoctorRepository doctorRepository;
 @Autowired 
 private PatientRepository patientRepository;
+
+@Autowired 
+private PrescriptionRepository prescriptionRepository;
     public List<Appointment> getallAppointments(){
         return appointmentRepository.findAll();
     }
@@ -41,11 +45,17 @@ private PatientRepository patientRepository;
 
         return appointmentRepository.save(appointment);
     }
-    public void deleteAppointment(Long id){
-        Appointment appointment=getAppointmentById(id);
-
-        appointmentRepository.delete(appointment);
+  public String deleteAppointment(Long id) {
+    Optional<Appointment> appointmentOptional = appointmentRepository.findById(id);
+    if (appointmentOptional.isEmpty()) {
+        return "The appointment with that id does not exist";
     }
+    if (prescriptionRepository.existsByAppointment_Id(id)) {
+        return "That appointment has prescriptions, delete them first";
+    }
+    appointmentRepository.delete(appointmentOptional.get());
+    return "Appointment deleted successfully";
+}
   /*   public List<Appointment> getPendingByDoctor(Long doctorId) {
     return appointmentRepository.findByDoctorIdAndStatusOrderByAppointmentDateAsc(doctorId, "PENDING");
 }

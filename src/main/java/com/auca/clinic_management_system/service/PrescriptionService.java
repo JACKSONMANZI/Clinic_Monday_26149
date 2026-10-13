@@ -3,6 +3,7 @@ package com.auca.clinic_management_system.service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,5 +46,27 @@ public class PrescriptionService {
     }
     public  List<Prescription> getPrescriptionByPatient(String ssNumber){
         return prescriptionRepository.findByPatientSsNumber(ssNumber);
+    }
+    public String updatePrescription(UUID id ,Prescription prescriptionDetails){
+        Optional<Prescription> prescriptOptional=prescriptionRepository.findById(id);
+        if (prescriptOptional.isEmpty()) {
+            return  "The prescription with that id does not exist";
+            
+        }
+        Prescription pr=prescriptOptional.get();
+        pr.setMedicineName(prescriptionDetails.getMedicineName());
+        pr.setDosage(prescriptionDetails.getDosage());
+        pr.setDurationDays(prescriptionDetails.getDurationDays());
+        prescriptionRepository.save(pr);
+        return "Prescription updated successfully";
+    }
+    public  String deletePrescription(UUID id){
+        Optional<Prescription> prescriptionOptional=prescriptionRepository.findById(id);
+        if ((prescriptionOptional.isEmpty())) {
+            return "The prescription with that id does not exist";
+            
+        }
+        prescriptionRepository.delete(prescriptionOptional.get());
+        return  "Prescription deleted successfully";
     }
 }
