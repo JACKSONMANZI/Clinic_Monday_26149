@@ -1,6 +1,7 @@
 package com.auca.clinic_management_system.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.auca.clinic_management_system.entity.Appointment;
 import com.auca.clinic_management_system.entity.Patient;
 import com.auca.clinic_management_system.service.PatientService;
 
@@ -58,5 +60,14 @@ public ResponseEntity<?> getPatientsOfDoctor(@PathVariable Long doctorId) {
 @GetMapping("/frequent")
 public List<Patient> getFrequentPatients(@RequestParam long min) {
     return patientService.getFrequentPatients(min);
+}
+@GetMapping("/{ssNumber}/upcoming")
+public ResponseEntity<?> getUpcoming(@PathVariable String ssNumber) {
+    Optional<List<Appointment>> result = patientService.getUpcomingAppointments(ssNumber);
+
+    if (result.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("That patient with that ssNumber does not exist");
+    }
+    return ResponseEntity.ok(result.get());
 }
 }

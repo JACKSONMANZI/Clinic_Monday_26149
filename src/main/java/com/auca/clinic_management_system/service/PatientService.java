@@ -1,10 +1,14 @@
 package com.auca.clinic_management_system.service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.auca.clinic_management_system.entity.Appointment;
+import com.auca.clinic_management_system.entity.AppointmentStatus;
 import com.auca.clinic_management_system.entity.Patient;
 import com.auca.clinic_management_system.repository.AppointmentRepository;
 import com.auca.clinic_management_system.repository.DoctorRepository;
@@ -54,5 +58,14 @@ public List<Patient> getPatientsOfDoctor(Long doctorId) {
 }
 public List<Patient> getFrequentPatients(long min) {
     return appointmentRepository.findFrequentPatients(min);
+}
+public Optional<List<Appointment>> getUpcomingAppointments(String ssNumber) {
+    if (patientRepository.findBySsNumber(ssNumber).isEmpty()) {
+        return Optional.empty();
+    }
+    List<AppointmentStatus> allowed = List.of(AppointmentStatus.SCHEDULED, AppointmentStatus.CONFIRMED);
+    return Optional.of(appointmentRepository
+            .findByPatient_SsNumberAndAppointmentDateGreaterThanEqualAndStatusInOrderByAppointmentDateAsc(
+                    ssNumber, LocalDate.now(), allowed));
 }
 }

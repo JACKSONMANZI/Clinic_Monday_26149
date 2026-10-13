@@ -86,4 +86,7 @@ int cancelDay(@Param("doctorId") Long doctorId, @Param("date") LocalDate date,
 int deleteCancelledBefore(@Param("date") LocalDate date, @Param("cancelled") AppointmentStatus cancelled);
 
 List<Appointment> findByDoctor_IdAndAppointmentDateAndStatusNot(Long doctorId,LocalDate date,AppointmentStatus status);
+List<Appointment> findByPatient_SsNumberAndAppointmentDateGreaterThanEqualAndStatusInOrderByAppointmentDateAsc(
+        String ssNumber, LocalDate date, List<AppointmentStatus> statuses);
+long countByStatus(AppointmentStatus status);
 }

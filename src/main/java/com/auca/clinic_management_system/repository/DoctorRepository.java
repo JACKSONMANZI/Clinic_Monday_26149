@@ -14,5 +14,7 @@ List<Doctor> findBySpecializationName(@Param("name") String name);
 
 @Query("SELECT d FROM Doctor d WHERE d.office IS NULL ORDER BY d.firstName,d.lastName")
 List<Doctor> findWithoutOffice();
-boolean existsByOffice_OfficeNumber(Integer officeNumber);
+boolean existsByOffice_OfficeNumber(Integer officeNum);
+@Query("SELECT d FROM Doctor d WHERE LOWER(d.firstName) LIKE LOWER(CONCAT('%', :name, '%')) OR LOWER(d.lastName) LIKE LOWER(CONCAT('%', :name, '%')) ORDER BY d.lastName")
+List<Doctor> searchByName(@Param("name") String name);
 }

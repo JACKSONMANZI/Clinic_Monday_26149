@@ -118,4 +118,7 @@ public String swapDoctorOffice(Long doctorId,Integer officeNumber){
     doctorRepository.save(doctor);
     return "Office changed successfully";
 }
+public List<Doctor> searchDoctors(String name){
+    return doctorRepository.searchByName(name);
+}
 }

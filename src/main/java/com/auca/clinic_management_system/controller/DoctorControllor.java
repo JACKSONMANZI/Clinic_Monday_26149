@@ -114,4 +114,8 @@ public ResponseEntity<?> getAgenda(@PathVariable Long doctorId, @RequestParam Lo
     }
     return ResponseEntity.ok(res.get());
 }
+@GetMapping ("/search")
+public List<Doctor> search(@RequestParam String name){
+    return doctorService.searchDoctors(name);
+}
 }
