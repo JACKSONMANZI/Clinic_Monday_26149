@@ -43,4 +43,7 @@ public class PrescriptionService {
         return  Optional.of(prescriptionRepository.findByAppointment_Id(appointmentId));
 
     }
+    public  List<Prescription> getPrescriptionByPatient(String ssNumber){
+        return prescriptionRepository.findByPatientSsNumber(ssNumber);
+    }
 }
