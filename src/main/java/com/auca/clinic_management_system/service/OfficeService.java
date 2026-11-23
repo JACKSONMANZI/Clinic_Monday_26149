@@ -27,6 +27,7 @@ public class OfficeService {
     }
      public Office updateOffice(Long id, Office officeDetails) {
         Office office = getOfficeById(id);
+        office.setOfficeName(officeDetails.getOfficeName());
         office.setOfficeNumber(officeDetails.getOfficeNumber());
         return officeRepository.save(office);
     }
